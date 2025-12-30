@@ -12,7 +12,7 @@ services:
     ports:
       - "5001:5001"
     deploy:
-      replicas:2
+      replicas: 2
 
   book_service:
     image: bookimage
@@ -35,5 +35,6 @@ services:
       - "5000:5000"
     deploy:
       replicas: 2
+
 
 
