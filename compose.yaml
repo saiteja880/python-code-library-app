@@ -1,6 +1,6 @@
 services:
   db:
-    image: dbimage
+    image: ss880/mynewapp:dbimage
     ports:
       - "3306:3306"
     deploy:
@@ -8,21 +8,21 @@ services:
 
 
   auth_service:
-    image: authimage
+    image: ss880/mynewapp:authimage
     ports:
       - "5001"
     deploy:
       replicas: 2
 
   book_service:
-    image: bookimage
+    image: ss880/mynewapp:bookimage
     ports:
       - "5003"
     deploy:
       replicas: 2
 
   borrow_service:
-    image: borrowimage
+    image: ss880/mynewapp:borrowimage
     ports:
       - "5004"
     deploy:
@@ -30,13 +30,16 @@ services:
 
 
   frontend:
-    image: frontendimage
+    image: ss880/mynewapp:frontendimage
     ports:
       - "5000"
     deploy:
       replicas: 2
+    depends_on:
+     - " db "
     
       
+
 
 
 
