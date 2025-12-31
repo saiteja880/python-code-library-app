@@ -35,9 +35,9 @@ services:
       - "5000"
     deploy:
       replicas: 2
-    depends_on:
-     - "db"
+    
       
+
 
 
 
