@@ -36,9 +36,14 @@ services:
     deploy:
       replicas: 2
     depends_on:
-     - " db "
+     - db
+     - auth_service
+     - book_service
+     - borrow_service
+
     
       
+
 
 
 
