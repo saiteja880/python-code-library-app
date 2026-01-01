@@ -2,7 +2,7 @@ services:
   db:
     image: ss880/mynewapp1:dbimage
     ports:
-      - "3306:3306"
+      - "3307:3306"
     deploy:
       replicas: 1
 
@@ -43,6 +43,7 @@ services:
 
     
       
+
 
 
 
