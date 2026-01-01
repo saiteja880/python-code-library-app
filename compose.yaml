@@ -29,8 +29,8 @@ services:
       replicas: 2
 
 
-  frontend:
-    image: ss880/mynewapp1:frontendimage
+  app:
+    image: ss880/mynewapp1:appimage
     ports:
       - "5000"
     deploy:
@@ -43,6 +43,7 @@ services:
 
     
       
+
 
 
 
