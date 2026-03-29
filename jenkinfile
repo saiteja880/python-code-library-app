@@ -1,0 +1,71 @@
+pipeline {
+    agent {
+        node {
+            label 'prod'
+        }
+    }
+    environment {
+        scannerHome= tool 'mysonar'
+    }
+    stages {
+        stage("code"){
+            steps {
+                git 'https://github.com/saiteja880/python-code-library-app.git'
+            }
+        }
+        stage("cqa"){
+            steps{
+                withSonarQubeEnv('mysonar') {
+                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=myproject"
+                }
+            }
+        }
+        stage('build'){
+            steps{
+                sh '''
+                    docker build -t dbimage database/
+                    docker build -t authimage auth/
+                    docker build -t bookimage book/
+                    docker build -t borrowimage borrow/
+                    docker build -t appimage .
+                 '''    
+            }
+         }
+         stage('scan'){
+             steps{
+                     sh 'trivy image dbimage'
+                     sh 'trivy image authimage  '
+                     sh 'trivy image bookimage '
+                     sh 'trivy image borrowimage '
+                     sh 'trivy image appimage '
+               }
+         }
+         stage('tag'){
+             steps{
+                 sh 'docker tag dbimage ss880/repo1:dbimage'
+                 sh 'docker tag dbimage ss880/repo1:authimage'
+                 sh 'docker tag bookimage ss880/repo1:bookimage'
+                 sh 'docker tag borrowimage ss880/repo1:borrowimage'
+                 sh 'docker tag appimage ss880/repo1:appimage'
+             }
+         }
+         stage('push'){
+             steps{
+                    script {
+                        withDockerRegistry(credentialsId: 'dockerhub') {
+                             sh 'docker push ss880/repo1:dbimage'
+                             sh 'docker push ss880/repo1:authimage'
+                             sh 'docker push ss880/repo1:bookimage'
+                             sh 'docker push ss880/repo1:borrowimage'
+                             sh 'docker push ss880/repo1:appimage'
+                        }
+                  }
+              }
+         }
+         stage("deploy"){
+             steps{
+                 sh 'docker stack deploy sai --compose-file=compose.yaml'
+             }
+         }
+    }
+}
